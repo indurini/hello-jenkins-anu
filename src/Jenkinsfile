@@ -1,0 +1,30 @@
+pipeline {
+  agent any
+
+  tools {
+    maven 'Maven 3.9.9'
+    // If you manage a JDK tool in Jenkins, uncomment the next line and match the name
+    jdk 'JDK 24'
+  }
+
+  options { timestamps() }
+
+  // Enable GitHub push trigger in the job configuration as well
+  triggers {
+    githubPush()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Test') {
+      steps {
+        sh 'mvn -B -q test'
+      }
+    }
+  }
+}
