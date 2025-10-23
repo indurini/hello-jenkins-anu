@@ -1,0 +1,21 @@
+pipeline {
+  agent any
+  options { timestamps() }
+  stages {
+    stage("Checkout") {
+      steps { checkout scm }
+    }
+    stage("Build and Test") {
+      steps {
+        // On Windows agents
+        bat "mvn -B -q test"
+      }
+    }
+    stage("Archive") {
+      steps {
+        archiveArtifacts artifacts: "target/**/*", fingerprint: true
+        junit "target/surefire-reports/*.xml"
+      }
+    }
+  }
+}
